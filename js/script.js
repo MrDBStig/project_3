@@ -36,4 +36,20 @@ window.addEventListener("DOMContentLoaded", function () {
       });
     }
   });
+
+  const logoBtn = document.querySelector(".header__logo");
+  let timerID,
+    i = 1;
+
+  logoBtn.addEventListener("click", () => {
+    timerID = setInterval(logger, 1000);
+  });
+
+  function logger() {
+    if (i === 3) {
+      clearInterval(timerID);
+    }
+    console.log("LogoClick!");
+    i++;
+  }
 });

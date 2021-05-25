@@ -104,4 +104,42 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   setClock(".timer", deadline);
+
+  // Modal
+
+  const modalBtns = document.querySelectorAll("[data-modal]"),
+    modalWindow = document.querySelector(".modal"),
+    modalCloseTrigger = document.querySelector("[data-close]");
+
+  function openModalWindow() {
+    modalWindow.classList.add("show");
+    modalWindow.classList.remove("hide");
+    document.body.style.overflow = "hidden";
+  }
+
+  modalBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      openModalWindow();
+    });
+  });
+
+  function closeModalWindow() {
+    modalWindow.classList.add("hide");
+    modalWindow.classList.remove("show");
+    document.body.style.overflow = "";
+  }
+
+  modalCloseTrigger.addEventListener("click", closeModalWindow);
+
+  modalWindow.addEventListener("click", (event) => {
+    if (event.target === modalWindow) {
+      closeModalWindow();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.code === "Escape" && modalWindow.classList.contains("show")) {
+      closeModalWindow();
+    }
+  });
 });

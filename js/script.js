@@ -108,8 +108,7 @@ window.addEventListener("DOMContentLoaded", function () {
   // Modal
 
   const modalBtns = document.querySelectorAll("[data-modal]"),
-    modalWindow = document.querySelector(".modal"),
-    modalCloseTrigger = document.querySelector("[data-close]");
+    modalWindow = document.querySelector(".modal");
 
   function openModalWindow() {
     modalWindow.classList.add("show");
@@ -130,10 +129,11 @@ window.addEventListener("DOMContentLoaded", function () {
     document.body.style.overflow = "";
   }
 
-  modalCloseTrigger.addEventListener("click", closeModalWindow);
-
   modalWindow.addEventListener("click", (event) => {
-    if (event.target === modalWindow) {
+    if (
+      event.target === modalWindow ||
+      event.target.getAttribute("data-close") == ""
+    ) {
       closeModalWindow();
     }
   });
@@ -144,7 +144,7 @@ window.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // const modalTimerId = setTimeout(openModalWindow, 10000);
+  const modalTimerId = setTimeout(openModalWindow, 50000);
 
   function showModalWindowByScroll() {
     if (
@@ -234,4 +234,74 @@ window.addEventListener("DOMContentLoaded", function () {
     ".menu .container",
     "menu__item"
   ).render();
+
+  // AJAX Forms
+
+  const forms = document.querySelectorAll("form");
+  const message = {
+    loading: "img/form/spinner.svg",
+    success: "Спасибо! Мы свяжемся с вами в ближайшее время.",
+    failure: "Упс. Что-то пошло не так...",
+  };
+
+  forms.forEach((item) => {
+    postData(item);
+  });
+
+  function postData(form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const statusMessage = document.createElement("img");
+      statusMessage.src = message.loading;
+      statusMessage.style.cssText = `
+        display: block;
+        margin: 0 auto;
+      `;
+      form.insertAdjacentElement("afterend", statusMessage);
+      const request = new XMLHttpRequest();
+      request.open("POST", "server.php");
+      // request.setRequestHeader("Content-type", "multipart/form-data"); // При использовании FormData заголовок не нужен.
+      // request.setRequestHeader("Content-type", "application/json"); // Здесь и далее - при реализации через JSON.
+      const formData = new FormData(form);
+      // const object = {};
+      // formData.forEach(function (value, key) {
+      //  object[key] = value;
+      // });
+      // request.send(JSON.stringify(object));
+      request.send(formData);
+      request.addEventListener("load", () => {
+        if (request.status === 200) {
+          console.log(request.response);
+          showThanksModal(message.success);
+          form.reset();
+          statusMessage.remove();
+        } else {
+          showThanksModal(message.failure);
+        }
+      });
+    });
+  }
+
+  function showThanksModal(message) {
+    const prevModal = document.querySelector(".modal__dialog");
+
+    prevModal.classList.add("hide");
+    openModalWindow();
+
+    const thanksModal = document.createElement("div");
+    thanksModal.classList.add("modal__dialog");
+    thanksModal.innerHTML = `
+      <div class="modal__content">
+        <div class="modal__close" data-close>×</div>
+        <div class="modal__title">${message}</div>
+      </div> 
+    `;
+    document.querySelector(".modal").append(thanksModal);
+    setTimeout(() => {
+      thanksModal.remove();
+      prevModal.classList.remove("hide");
+      prevModal.classList.add("show");
+      closeModalWindow();
+    }, 5000);
+  }
 });

@@ -1,0 +1,27 @@
+{
+  "name": "food",
+  "version": "0.9.0",
+  "description": "Diet course site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrDBStig/project_3.git"
+  },
+  "keywords": [
+    "food",
+    "diet",
+    "menu"
+  ],
+  "author": "Mikita Kavaleuski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrDBStig/project_3/issues"
+  },
+  "homepage": "https://github.com/MrDBStig/project_3#readme",
+  "devDependencies": {
+    "json-server": "^0.16.3"
+  }
+}
